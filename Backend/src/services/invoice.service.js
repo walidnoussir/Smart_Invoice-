@@ -27,9 +27,13 @@ export const getAllInvoicesService = async (req) => {
 export const getInvoiceByIdService = async (req) => {
   const { id } = req.params;
 
+  // const invoice = await Invoice.find({
+  //   _id: id,
+  //   userId: req.user._id,
+  // }).populate("supplierId", "name email phone");
   const invoice = await Invoice.find({
     _id: id,
-    userId: req.user._id,
+    userId: "69da57e8bf08353ee3ab8719",
   }).populate("supplierId", "name email phone");
 
   if (!invoice) {
