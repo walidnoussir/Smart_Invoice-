@@ -3,6 +3,7 @@ import AppLayout from "./components/AppLayout";
 import HomPage from "./pages/HomPage";
 import SupplierPage from "./pages/SupplierPage";
 import InvoicePage from "./pages/InvoicePage";
+// import Paiements from "./components/Paiements";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route index element={<HomPage />} />
           <Route path="suppliers" element={<SupplierPage />} />
           <Route path="invoices" element={<InvoicePage />} />
+          <Route path="/invoices/:id" element={<InvoicePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
