@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@layer components {
+  .active {
+    @apply bg-indigo-900 rounded-lg;
+  }
+
+  .li {
+    @apply flex items-center gap-2 py-2 px-2;
+  }
+}
