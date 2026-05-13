@@ -4,10 +4,10 @@ import Dashboard from "./Dashboard";
 
 function AppLayout() {
   return (
-    <div className="flex gap-2.5 ">
+    <div className="flex gap-2.5 h-screen">
       {/* <NavBar /> */}
       <Dashboard />
-      <main>
+      <main className="w-full overflow-scroll">
         <Outlet />
       </main>
     </div>
