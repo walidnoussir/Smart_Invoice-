@@ -4,7 +4,8 @@ import Dashboard from "./Dashboard";
 
 function AppLayout() {
   return (
-    <div>
+    <div className="flex gap-2.5 ">
+      {/* <NavBar /> */}
       <Dashboard />
       <main>
         <Outlet />
