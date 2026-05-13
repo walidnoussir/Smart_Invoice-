@@ -3,7 +3,8 @@ import AppLayout from "./components/AppLayout";
 import HomPage from "./pages/HomPage";
 import SupplierPage from "./pages/SupplierPage";
 import InvoicePage from "./pages/InvoicePage";
-import SupplierDetailsPage from "./pages/SupplierDetailsPage";
+import InvoiceProvider from "./components/invoice/context/InvoiceProvider";
+import InvoiceDetails from "./pages/InvoiceDetails";
 
 function App() {
   return (
@@ -12,8 +13,16 @@ function App() {
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomPage />} />
           <Route path="suppliers" element={<SupplierPage />} />
-          <Route path="invoices" element={<InvoicePage />} />
-          <Route path="supplier-details" element={<SupplierDetailsPage />} />
+
+          <Route
+            path="invoices"
+            element={
+              <InvoiceProvider>
+                <InvoicePage />
+              </InvoiceProvider>
+            }
+          />
+          <Route path="/invoice-details/:id" element={<InvoiceDetails />} />
         </Route>
       </Routes>
     </BrowserRouter>
