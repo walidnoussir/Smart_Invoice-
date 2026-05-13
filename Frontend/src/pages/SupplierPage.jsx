@@ -1,3 +1,7 @@
+import { useState } from "react";
+import NewSupplier from "../components/suppliers/NewSupplier";
+import { useNavigate } from "react-router-dom";
+
 const suppliers = [
   {
     id: 1,
@@ -20,6 +24,9 @@ const suppliers = [
 ];
 
 function SupplierPage() {
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <div>
       <div className="bg-white w-full rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -34,8 +41,11 @@ function SupplierPage() {
             </p>
           </div>
 
-          <button className="bg-blue-600 hover:bg-blue-700 transition text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm cursor-pointer">
-            + Nouveau fournisseur
+          <button
+            onClick={() => setIsOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 transition text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm cursor-pointer"
+          >
+            + Nouveau fournisseurs
           </button>
         </div>
 
@@ -74,7 +84,10 @@ function SupplierPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
                       {/* View */}
-                      <button className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition">
+                      <button
+                        onClick={() => navigate("/supplier-details")}
+                        className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="w-4 h-4 text-blue-600"
@@ -121,6 +134,7 @@ function SupplierPage() {
           </button>
         </div>
       </div>
+      {isOpen && <NewSupplier setIsOpen={setIsOpen} />}
     </div>
   );
 }
