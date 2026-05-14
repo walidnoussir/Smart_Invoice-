@@ -6,7 +6,7 @@ function SideBar() {
     <div className="flex flex-col justify-between h-[95%] fixed py-4 px-2">
       <ul className="flex gap-5 flex-col text-white">
         <li>
-          <NavLink to="/" className="li">
+          <NavLink to="/Dashboard" className="li">
             <House />
             <span>Dashboard</span>
           </NavLink>
