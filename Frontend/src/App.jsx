@@ -3,19 +3,41 @@ import AppLayout from "./components/AppLayout";
 import HomPage from "./pages/HomPage";
 import SupplierPage from "./pages/SupplierPage";
 import InvoicePage from "./pages/InvoicePage";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
 import SupplierDetailsPage from "./pages/SupplierDetailsPage";
+import AuthProvider from "./contexts/AuthContext";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AppLayout />}>
-          <Route index element={<HomPage />} />
-          <Route path="suppliers" element={<SupplierPage />} />
-          <Route path="invoices" element={<InvoicePage />} />
-          <Route path="supplier-details" element={<SupplierDetailsPage />} />
-        </Route>
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<HomPage />} />
+            <Route path="suppliers" element={<SupplierPage />} />
+            <Route
+              path="suppliers-details/:id"
+              element={<SupplierDetailsPage />}
+            />
+            <Route path="invoices" element={<InvoicePage />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
