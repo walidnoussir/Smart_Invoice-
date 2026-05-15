@@ -7,7 +7,6 @@ import Model from "../components/Model";
 import { useInvoiceContext } from "../hooks/useInvoiceContext";
 import { InvoiceContext } from "../components/invoice/context/InvoiceContext";
 import { useState } from "react";
-import { uniqueFournisseurs } from "../utilities/utility";
 
 function InvoicePage() {
   const [state, toggle] = useToggle();
