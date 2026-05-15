@@ -4,6 +4,8 @@ import { useInvoiceContext } from "../../hooks/useInvoiceContext";
 
 function MenuInvoice({ invoice }) {
   const navigate = useNavigate();
+  const { removeInvoice } = useInvoiceContext(InvoiceContext);
+
   return (
     <div
       className={
@@ -11,22 +13,22 @@ function MenuInvoice({ invoice }) {
       }
     >
       <button
-        onClick={() => navigate(`/invoice-details/${invoice.id}`)}
+        onClick={() => navigate(`/invoice-details/${invoice._id}`)}
         className="
-         text-sm font-semibold
+        text-sm font-semibold
         rounded
        bg-green-100
        hover:bg-green-200
         text-green-500
         p-1
-        w-18
-        "
+        w-18"
       >
         See
       </button>
 
+      {/* Delete invoice */}
       <button
-        onClick={() => seeInvoice(invoice.id)}
+        onClick={() => removeInvoice(invoice._id)}
         className="
          text-sm font-semibold
         rounded

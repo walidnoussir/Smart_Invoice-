@@ -5,7 +5,6 @@ import { MoreVertical } from "lucide-react";
 
 function InvoiceRow({ invoice }) {
   const [state, toggle] = useToggle();
-
   return (
     <div
       className="grid grid-cols-6 items-center gap-2 px-6 py-6 border-b border-gray-200

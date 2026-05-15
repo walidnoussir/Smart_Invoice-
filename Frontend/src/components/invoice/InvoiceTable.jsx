@@ -1,19 +1,17 @@
+import { useEffect } from "react";
 import { useInvoiceContext } from "../../hooks/useInvoiceContext";
-import ThreeDotsSpinner from "../ThreeDotsSpinner";
 import { InvoiceContext } from "./context/InvoiceContext";
 import InvoiceRow from "./InvoiceRow";
 
 function InvoiceTable() {
-  const { loading, invoices, getInvoices, removeInvoice } =
-    useInvoiceContext(InvoiceContext);
+  const { loading, invoices, getInvoices } = useInvoiceContext(InvoiceContext);
 
-  console.log(invoices);
-
-  getInvoices();
+  useEffect(() => {
+    getInvoices();
+  }, []);
 
   if (loading) {
-    <ThreeDotsSpinner />;
-    <div>Loading....</div>;
+    return <div>Loading....</div>;
   } else {
     return (
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-md  border border-gray-200">
@@ -28,7 +26,7 @@ function InvoiceTable() {
         </div>
         {/* Rows */}
         <div>
-          {invoices.map((invoice) => (
+          {invoices?.map((invoice) => (
             //console.log("data", data),
             <InvoiceRow key={invoice._id} invoice={invoice} />
           ))}

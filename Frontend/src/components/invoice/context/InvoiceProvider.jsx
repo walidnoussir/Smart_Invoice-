@@ -11,40 +11,24 @@ const InvoiceProvider = ({ children }) => {
   const token = localStorage.getItem("token");
 
   // GET INVOICES
-    useEffect(() => {
-    const fetchInvoice = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/invoices/", {
-          headers: {
-            //// --- I'll unComment this line after compilation of project.
-            //Authorization:token
-            // I'll add the 'token' as a hard coded.
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA0NDllMGI0ODNjODhkYTkyNWRmYzciLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzc4NjY1OTkxLCJleHAiOjE3NzkyNzA3OTF9.HMPPOub6ISVDjgyxmRmNoO4Ict8OGtXkXmLoKhp7fIY",
-          },
-        });
+  const getInvoices = async () => {
+    try {
+      setLoading(true);
 
-        console.log("response", response);
-        if (response.status === 200) {
-          setData(response.data);
-        }
-      } catch (error) {
-        console.log("error", error);
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+      const response = await axios.get("http://localhost:5000/api/invoices", {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA0NDllMGI0ODNjODhkYTkyNWRmYzciLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzc4NjY1OTkxLCJleHAiOjE3NzkyNzA3OTF9.HMPPOub6ISVDjgyxmRmNoO4Ict8OGtXkXmLoKhp7fIY",
+        },
+      });
 
-    fetchInvoice();
-  }, [api_url]);
-
-  return {
-    loading,
-    error,
-    data,
+      setInvoices(response.data.invoices);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
-};
 
   // DELETE
   const removeInvoice = async (id) => {
@@ -62,6 +46,22 @@ const InvoiceProvider = ({ children }) => {
     }
   };
 
+  // ADD
+  const addInvoice = async (invoice) => {
+    try {
+      await axios.post(`http://localhost:5000/api/invoices/`, invoice, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA0NDllMGI0ODNjODhkYTkyNWRmYzciLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzc4NjY1OTkxLCJleHAiOjE3NzkyNzA3OTF9.HMPPOub6ISVDjgyxmRmNoO4Ict8OGtXkXmLoKhp7fIY",
+        },
+      });
+
+      setInvoices([]);
+      getInvoices();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <InvoiceContext.Provider
       value={{
@@ -69,6 +69,7 @@ const InvoiceProvider = ({ children }) => {
         invoices,
         getInvoices,
         removeInvoice,
+        addInvoice,
       }}
     >
       {children}
