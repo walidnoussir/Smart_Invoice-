@@ -1,6 +1,6 @@
 import "../../css/dashboard.css";
 import { dashboardData } from "../Dashboard/data";
-import ExpensesChart from "./Chart";
+import { ExpensesChart, DoughnutChart } from "./Chart";
 
 const facturesEnRetard = dashboardData.recentFactures.filter(
   (facture) => facture.statut === "En retard",
@@ -66,7 +66,7 @@ function Dashboard() {
 
           <div className="chart">
             <h2>Répartition par status</h2>
-            {/* chart 2 */}
+            <DoughnutChart />
           </div>
         </div>
       </div>
