@@ -1,39 +1,40 @@
-function SupplierDetailsPage() {
-  const supplier = {
-    name: "TechPro SARL",
-    email: "contact@techpro.com",
-    phone: "0555 12 34 56",
-    address: "123 Rue des Entreprises, Alger",
-    totalInvoices: 24,
-    totalAmount: "25,600.00 €",
-    paid: "17,800.00 €",
-    unpaid: "7,800.00 €",
-  };
+import { useNavigate, useParams } from "react-router-dom";
+import useRetreive from "../hooks/useRetreive";
+import Spinner from "../components/ui/Spinner";
+import { ArrowLeft } from "lucide-react";
 
-  const invoices = [
-    {
-      id: "INV-001",
-      date: "15/05/2024",
-      amount: "2,500.00 €",
-      status: "Payée",
-    },
-    {
-      id: "INV-002",
-      date: "20/05/2024",
-      amount: "1,200.00 €",
-      status: "Partiellement payée",
-    },
-    {
-      id: "INV-003",
-      date: "01/06/2024",
-      amount: "980.00 €",
-      status: "Impayée",
-    },
-  ];
+function SupplierDetailsPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  console.log(id);
+
+  const { loading, data: supplier } = useRetreive(
+    `http://localhost:5000/api/suppliers/${id}`,
+  );
+  // const supplier = {
+  //   name: "TechPro SARL",
+  //   email: "contact@techpro.com",
+  //   phone: "0555 12 34 56",
+  //   address: "123 Rue des Entreprises, Alger",
+  //   totalInvoices: 24,
+  //   totalAmount: "25,600.00 €",
+  //   paid: "17,800.00 €",
+  //   unpaid: "7,800.00 €",
+  // };
+
+  if (loading) return <Spinner />;
+
+  console.log(supplier);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       {/* Header */}
+      <button
+        className="text-blue-500 cursor-pointer"
+        onClick={() => navigate(-1)}
+      >
+        <ArrowLeft className="size-8" />
+      </button>
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
           <div>
@@ -45,14 +46,8 @@ function SupplierDetailsPage() {
               {supplier.name}
             </h1>
 
-            <p className="text-gray-500 mt-2">
-              Détails et statistiques du fournisseur
-            </p>
+            <p className="text-gray-500 mt-2">Détails du fournisseur</p>
           </div>
-
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-medium transition">
-            Modifier
-          </button>
         </div>
       </div>
 
@@ -67,116 +62,25 @@ function SupplierDetailsPage() {
           <div className="space-y-4">
             <div>
               <p className="text-sm text-gray-500">Email</p>
-              <p className="font-medium text-gray-800">{supplier.email}</p>
+              <p className="font-medium text-gray-800">
+                {supplier.supplier.email}
+              </p>
             </div>
 
             <div>
               <p className="text-sm text-gray-500">Téléphone</p>
-              <p className="font-medium text-gray-800">{supplier.phone}</p>
+              <p className="font-medium text-gray-800">
+                {supplier.supplier.phone}
+              </p>
             </div>
 
             <div>
               <p className="text-sm text-gray-500">Adresse</p>
-              <p className="font-medium text-gray-800">{supplier.address}</p>
+              <p className="font-medium text-gray-800">
+                {supplier.supplier.address}
+              </p>
             </div>
           </div>
-        </div>
-
-        {/* Stats */}
-        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-            <p className="text-sm text-gray-500 mb-2">Total Factures</p>
-
-            <h3 className="text-3xl font-bold text-gray-800">
-              {supplier.totalInvoices}
-            </h3>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-            <p className="text-sm text-gray-500 mb-2">Montant Total</p>
-
-            <h3 className="text-3xl font-bold text-gray-800">
-              {supplier.totalAmount}
-            </h3>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-            <p className="text-sm text-gray-500 mb-2">Payées</p>
-
-            <h3 className="text-3xl font-bold text-green-600">
-              {supplier.paid}
-            </h3>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-            <p className="text-sm text-gray-500 mb-2">Impayées</p>
-
-            <h3 className="text-3xl font-bold text-red-600">
-              {supplier.unpaid}
-            </h3>
-          </div>
-        </div>
-      </div>
-
-      {/* Invoices Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800">Factures</h2>
-
-            <p className="text-sm text-gray-500 mt-1">
-              Liste des factures liées au fournisseur
-            </p>
-          </div>
-
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-            + Nouvelle facture
-          </button>
-        </div>
-
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider">
-              <tr>
-                <th className="px-6 py-4">N° Facture</th>
-                <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4">Montant</th>
-                <th className="px-6 py-4">Statut</th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-gray-100">
-              {invoices.map((invoice, index) => (
-                <tr key={index} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-4 font-medium text-gray-800">
-                    {invoice.id}
-                  </td>
-
-                  <td className="px-6 py-4 text-gray-600">{invoice.date}</td>
-
-                  <td className="px-6 py-4 text-gray-800 font-medium">
-                    {invoice.amount}
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        invoice.status === "Payée"
-                          ? "bg-green-100 text-green-700"
-                          : invoice.status === "Partiellement payée"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {invoice.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </div>
     </div>

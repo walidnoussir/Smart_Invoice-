@@ -10,31 +10,29 @@ const useRetreive = (api_url) => {
   // const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchInvoice = async () => {
+    const fetchData = async () => {
       try {
+        const token = localStorage.getItem("token");
+
+        console.log(token);
+
         const response = await axios.get(api_url, {
           headers: {
-            //// --- I'll unComment this line after compilation of project.
-            //Authorization:token
-            // I'll add the 'token' as a hard coded.
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA0NDllMGI0ODNjODhkYTkyNWRmYzciLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzc4NjY1OTkxLCJleHAiOjE3NzkyNzA3OTF9.HMPPOub6ISVDjgyxmRmNoO4Ict8OGtXkXmLoKhp7fIY",
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        console.log("response", response);
-        if (response.status === 200) {
-          setData(response.data);
-        }
-      } catch (error) {
-        console.log("error", error);
-        setError(error.message);
+        setData(response.data);
+      } catch (err) {
+        console.log(err.response);
+
+        setError(err.response?.data?.message || err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchInvoice();
+    fetchData();
   }, [api_url]);
 
   return {

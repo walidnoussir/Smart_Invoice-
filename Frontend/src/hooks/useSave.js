@@ -1,28 +1,44 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-const useSave = (api_url, payload) => {
-  const [loading, setLoading] = useState(true);
+const useSave = () => {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchGameData = async () => {
-      try {
-        const response = await axios.post(api_url, payload);
-        if (response.status === 200) {
-          setData(response.data);
-        }
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchGameData();
-  }, [api_url, payload]);
+  const saveData = async (api_url, payload) => {
+    try {
+      setLoading(true);
 
-  return [loading, error, data];
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(api_url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      setData(response.data);
+
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+
+      setError(message);
+
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    loading,
+    data,
+    error,
+    saveData,
+  };
 };
 
 export default useSave;

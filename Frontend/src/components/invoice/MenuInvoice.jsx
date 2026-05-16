@@ -13,7 +13,7 @@ function MenuInvoice({ invoice }) {
       }
     >
       <button
-        onClick={() => navigate(`/invoice-details/${invoice._id}`)}
+        onClick={() => navigate(`/home/invoice-details/${invoice._id}`)}
         className="
         text-sm font-semibold
         rounded

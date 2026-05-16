@@ -1,72 +1,84 @@
 import { InvoiceContext } from "./InvoiceContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const InvoiceProvider = ({ children }) => {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState("");
-  //"http://localhost:5000/api/invoices/"
 
   const token = localStorage.getItem("token");
+
+  // CONFIG
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   // GET INVOICES
   const getInvoices = async () => {
     try {
       setLoading(true);
 
-      const response = await axios.get("http://localhost:5000/api/invoices", {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA0NDllMGI0ODNjODhkYTkyNWRmYzciLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzc4NjY1OTkxLCJleHAiOjE3NzkyNzA3OTF9.HMPPOub6ISVDjgyxmRmNoO4Ict8OGtXkXmLoKhp7fIY",
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:5000/api/invoices",
+        config,
+      );
 
       setInvoices(response.data.invoices);
     } catch (error) {
-      console.log(error);
+      console.log("GET INVOICES ERROR:", error);
+
+      setIsError(error.response?.data?.message || "Failed to fetch invoices");
     } finally {
       setLoading(false);
     }
   };
 
-  // DELETE
+  // DELETE INVOICE
   const removeInvoice = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/invoices/${id}`, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA0NDllMGI0ODNjODhkYTkyNWRmYzciLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzc4NjY1OTkxLCJleHAiOjE3NzkyNzA3OTF9.HMPPOub6ISVDjgyxmRmNoO4Ict8OGtXkXmLoKhp7fIY",
-        },
-      });
+      await axios.delete(`http://localhost:5000/api/invoices/${id}`, config);
 
       setInvoices((prev) => prev.filter((invoice) => invoice._id !== id));
     } catch (error) {
-      console.log(error);
+      console.log("DELETE ERROR:", error);
+
+      setIsError(error.response?.data?.message || "Failed to delete invoice");
     }
   };
 
-  // ADD
+  // ADD INVOICE
   const addInvoice = async (invoice) => {
     try {
-      await axios.post(`http://localhost:5000/api/invoices/`, invoice, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA0NDllMGI0ODNjODhkYTkyNWRmYzciLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzc4NjY1OTkxLCJleHAiOjE3NzkyNzA3OTF9.HMPPOub6ISVDjgyxmRmNoO4Ict8OGtXkXmLoKhp7fIY",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/invoices",
+        invoice,
+        config,
+      );
 
-      setInvoices([]);
-      getInvoices();
+      setInvoices((prev) => [...prev, response.data.invoice]);
     } catch (error) {
-      console.log(error);
+      console.log("ADD ERROR:", error);
+
+      setIsError(error.response?.data?.message || "Failed to add invoice");
     }
   };
+
+  // FETCH ON MOUNT
+  useEffect(() => {
+    if (token) {
+      getInvoices();
+    }
+  }, []);
+
   return (
     <InvoiceContext.Provider
       value={{
-        loading,
         invoices,
+        loading,
+        isError,
         getInvoices,
         removeInvoice,
         addInvoice,
