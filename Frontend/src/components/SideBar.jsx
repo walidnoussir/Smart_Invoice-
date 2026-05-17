@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 function SideBar() {
   return (
-    <div className="flex flex-col justify-between h-[80%] py-4 px-2">
+    <div className="flex flex-col justify-between h-[95%] fixed py-4 px-2">
       <ul className="flex gap-5 flex-col text-white">
         <li>
           <NavLink to="/" className="li">
@@ -24,6 +24,7 @@ function SideBar() {
           </NavLink>
         </li>
       </ul>
+
       <button className="li text-white px-2">
         <LogOut />
         <span>Logout</span>

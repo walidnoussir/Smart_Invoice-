@@ -16,7 +16,7 @@ import { protectRoute } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// router.use(protectRoute);
+router.use(protectRoute);
 
 router
   .post("/", validateCreateInvoice, validate, createInvoiceController)
