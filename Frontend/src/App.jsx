@@ -11,14 +11,16 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import SupplierDetailsPage from "./pages/SupplierDetailsPage";
 import AuthProvider from "./contexts/AuthContext";
 import InvoiceProvider from "./components/invoice/context/InvoiceProvider";
-import InvoiceDetails from "./pages/InvoiceDetails";
 import Dashboard from "./pages/Dashboard/DashboardPage";
+import InvoiceDetailsPage from "./pages/InvoiceDetailPage";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <InvoiceProvider>  {/* Move InvoiceProvider here */}
+        <InvoiceProvider>
+          {" "}
+          {/* Move InvoiceProvider here */}
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
@@ -38,8 +40,12 @@ function App() {
                 path="suppliers-details/:id"
                 element={<SupplierDetailsPage />}
               />
-              <Route path="invoices" element={<InvoicePage />} />  {/* Remove InvoiceProvider from here */}
-              <Route path="invoice-details/:id" element={<InvoiceDetails />} />
+              <Route path="invoices" element={<InvoicePage />} />{" "}
+              {/* Remove InvoiceProvider from here */}
+              <Route
+                path="invoice-details/:id"
+                element={<InvoiceDetailsPage />}
+              />
             </Route>
           </Routes>
         </InvoiceProvider>

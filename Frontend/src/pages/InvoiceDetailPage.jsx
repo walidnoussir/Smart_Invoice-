@@ -81,6 +81,8 @@ export default function InvoiceDetailsPage() {
   );
 
   const remaining = Number(invoice.amount || 0) - totalPaid;
+  console.log(payments);
+  
 
   return (
     <>
@@ -169,7 +171,6 @@ export default function InvoiceDetailsPage() {
             <TableRow>
               <TableCell>Date</TableCell>
               <TableCell align="right">Montant</TableCell>
-              <TableCell align="right">Payment Method</TableCell>
               <TableCell align="right">Reference</TableCell>
             </TableRow>
           </TableHead>
@@ -197,10 +198,7 @@ export default function InvoiceDetailsPage() {
                     {formatCurrency(payment.amount || 0)}
                   </TableCell>
 
-                  <TableCell align="right">
-                    {payment.paymentMethod || "-"}
-                  </TableCell>
-
+                  
                   <TableCell align="right">
                     {payment._id?.slice(0, 4)}......{payment._id?.slice(-4)}
                   </TableCell>

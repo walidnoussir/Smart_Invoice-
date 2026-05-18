@@ -1,18 +1,16 @@
 
-import {Dialog ,Card ,CardActions ,CardContent,Button,TextField,Typography,InputLabel,MenuItem,Select} from "@mui/material";
+import {Dialog ,Card ,CardActions ,CardContent,Button,TextField,Typography,InputLabel} from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 
 
 export default function PaymentForm({ open, onClose,invoiceId ,token , onAddPayment }) {
   const [amount, setAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
   const [paymentDate, setPaymentDate] = useState("");
   const [reference, setReference] = useState("");
   const handleSubmit = async () => {
     const newPayment ={
       amount,
-      paymentMethod,
       paymentDate,
       reference,
     }
@@ -25,6 +23,7 @@ export default function PaymentForm({ open, onClose,invoiceId ,token , onAddPaym
       }
     )
     onAddPayment(response.data.payment)
+    
     onClose()
   }
   return (
@@ -41,25 +40,8 @@ export default function PaymentForm({ open, onClose,invoiceId ,token , onAddPaym
               value={amount}
               onChange ={(e) => setAmount(e.target.value)}
             />
-            <InputLabel
-              id="demo-simple-select-label"
-              sx={{ marginTop: "30px" }}
-            >
-              Payment Method
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Age"
-              sx={{ width: "500px" }}
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            >
-              <MenuItem>Bank Transfer</MenuItem>
-              <MenuItem>Cash</MenuItem>
-              <MenuItem>Credit Card</MenuItem>
-              <MenuItem>Check</MenuItem>
-            </Select>
+           
+             
             <InputLabel
               id="demo-simple-select-label"
               sx={{ marginTop: "30px" }}
