@@ -57,6 +57,7 @@ const InvoiceProvider = ({ children }) => {
   // ADD INVOICE
   const addInvoice = useCallback(
     async (invoice) => {
+      console.log("Inserted invoice", invoice);
       try {
         const response = await axios.post(
           "http://localhost:5000/api/invoices",
@@ -64,8 +65,8 @@ const InvoiceProvider = ({ children }) => {
           config,
         );
 
-        setInvoices((prev) => [...prev, response.data.invoice]);
         getInvoices();
+        //setInvoices(invoices);
       } catch (error) {
         console.log("ADD ERROR:", error);
 

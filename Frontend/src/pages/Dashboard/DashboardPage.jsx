@@ -1,26 +1,22 @@
 import "../../css/dashboard.css";
 import { dashboardData } from "../Dashboard/data";
 import { ExpensesChart, DoughnutChart } from "./Chart";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { getProfile } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/ui/Spinner";
-
-const facturesEnRetard = dashboardData.recentFactures.filter(
-  (facture) => facture.statut === "En retard",
-);
+import { InvoiceContext } from "../../components/invoice/context/InvoiceContext";
 
 const totalDepenses = dashboardData.recentFactures.reduce(
   (total, facture) => total + facture.montant,
   0,
 );
 
-const moisActuel = new Date().getMonth(); //get actuel month
-const anneeActuelle = new Date().getFullYear(); // year : 2026
+const moisActuel = new Date().getMonth();
+const anneeActuelle = new Date().getFullYear();
 const paiementCeMois = dashboardData.recentFactures
   .filter((facture) => {
-    const dateFacture = new Date(facture.date); // str => obj ===> apply date methods
-
+    const dateFacture = new Date(facture.date);
     return (
       dateFacture.getMonth() === moisActuel &&
       dateFacture.getFullYear() === anneeActuelle &&
@@ -34,12 +30,30 @@ function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
- 
+  const [invoices, setInvoices] = useState([]);
+  const { getInvoices } = useContext(InvoiceContext);
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const response = await getInvoices();
+        setInvoices(response.data || response);
+        console.log("Invoices loaded:", response.data || response);
+      } catch (err) {
+        console.error("Error fetching invoices:", err);
+        setError("Impossible de charger les factures");
+      }
+    };
+
+    if (getInvoices) {
+      fetchInvoices();
+    }
+  }, [getInvoices]);
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       const token = localStorage.getItem("token");
       
-      // Vérifier si l'utilisateur est authentifié
       if (!token) {
         navigate("/login");
         return;
@@ -47,13 +61,11 @@ function Dashboard() {
 
       try {
         const response = await getProfile();
-        
-        setUser(response.data); // Stocker les infos utilisateur
+        setUser(response.data);
         setLoading(false);
       } catch (err) {
         console.error("Erreur lors de la récupération du profil:", err);
         
-        // Si le token est invalide ou expiré
         if (err.response?.status === 401 || err.response?.status === 403) {
           localStorage.removeItem("token");
           navigate("/login");
@@ -66,23 +78,30 @@ function Dashboard() {
 
     fetchUserProfile();
   }, [navigate]);
-  if(loading) {
-    return <Spinner />
+
+  if (loading) {
+    return <Spinner />;
   }
+
+  // Calculate late invoices from fetched invoices
+  const facturesEnRetard = invoices.filter(
+    (facture) => facture.statut === "En retard"
+  );
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-content">
         <h1 className="dashboard-title">Dashboard</h1>
 
         <div className="hero">
-          <h3>Bonjour, {user[0]?.name || user[0]?.username || "Utilisateur"} 👋</h3>
+          <h3>Bonjour, {user?.[0]?.name || user?.[0]?.username || "Utilisateur"} 👋</h3>
           <p>Voici un aperçu de votre activité</p>
         </div>
 
         <div className="cards">
           <article>
             <h3>Total Factures</h3> 
-            <p>{dashboardData.recentFactures.length}</p>
+            <p>{invoices.length || dashboardData.recentFactures.length}</p>
           </article>
 
           <article>
@@ -100,6 +119,7 @@ function Dashboard() {
             <p>{paiementCeMois} DH</p>
           </article>
         </div>
+        
         <div className="charts-container">
           <div className="chart">
             <h2>Graphe des Dépenses</h2>

@@ -15,40 +15,34 @@ import InvoiceDetails from "./pages/InvoiceDetails";
 import Dashboard from "./pages/Dashboard/DashboardPage";
 
 function App() {
- 
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+        <InvoiceProvider>  {/* Move InvoiceProvider here */}
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="suppliers" element={<SupplierPage />} />
             <Route
-              path="suppliers-details/:id"
-              element={<SupplierDetailsPage />}
-            />
-            <Route
-              path="invoices"
+              path="/home"
               element={
-                <InvoiceProvider>
-                  <InvoicePage />
-                </InvoiceProvider>
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
               }
-            />
-            <Route path="invoice-details/:id" element={<InvoiceDetails />} />
-          </Route>
-        </Routes>
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="suppliers" element={<SupplierPage />} />
+              <Route
+                path="suppliers-details/:id"
+                element={<SupplierDetailsPage />}
+              />
+              <Route path="invoices" element={<InvoicePage />} />  {/* Remove InvoiceProvider from here */}
+              <Route path="invoice-details/:id" element={<InvoiceDetails />} />
+            </Route>
+          </Routes>
+        </InvoiceProvider>
       </AuthProvider>
     </BrowserRouter>
   );
