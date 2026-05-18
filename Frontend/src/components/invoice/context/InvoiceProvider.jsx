@@ -72,7 +72,7 @@ const InvoiceProvider = ({ children }) => {
         setIsError(error.response?.data?.message || "Failed to add invoice");
       }
     },
-    [config],
+    [config, getInvoices],
   );
 
   // Get Suppliers.
