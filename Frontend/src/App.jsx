@@ -12,6 +12,7 @@ import SupplierDetailsPage from "./pages/SupplierDetailsPage";
 import AuthProvider from "./contexts/AuthContext";
 import InvoiceProvider from "./components/invoice/context/InvoiceProvider";
 import InvoiceDetails from "./pages/InvoiceDetails";
+import Dashboard from "./pages/Dashboard/DashboardPage";
 
 function App() {
  
@@ -31,7 +32,7 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<HomPage />} />
+            <Route index element={<Dashboard />} />
             <Route path="suppliers" element={<SupplierPage />} />
             <Route
               path="suppliers-details/:id"
