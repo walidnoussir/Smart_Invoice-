@@ -6,11 +6,13 @@ import { useToggle } from "../hooks/usetoggle";
 import Model from "../components/Model";
 import { useInvoiceContext } from "../hooks/useInvoiceContext";
 import { InvoiceContext } from "../components/invoice/context/InvoiceContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Spinner from "../components/ui/Spinner";
 
 function InvoicePage() {
   const [state, toggle] = useToggle();
-  const { invoices, addInvoice, loading } = useInvoiceContext(InvoiceContext);
+  const { addInvoice, loading, getSuppliers, suppliers } =
+    useInvoiceContext(InvoiceContext);
 
   const [invoice, setInvoice] = useState({
     amount: null,
@@ -19,11 +21,9 @@ function InvoicePage() {
     description: "",
   });
 
-  const uniqueArray = [
-    ...new Map(
-      invoices.map(({ supplierId }) => [supplierId._id, supplierId]),
-    ).values(),
-  ];
+  useEffect(() => {
+    getSuppliers();
+  }, [getSuppliers]);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -39,67 +39,70 @@ function InvoicePage() {
 
     console.log("invoice added");
   };
+  if (loading) {
+    return <Spinner />;
+  } else {
+    return (
+      <div className="relative w-[80vw] mt-2.5">
+        <div>
+          <div className="flex justify-between items-center mb-5">
+            <Text text={"Facture"} style={"font-bold"} />
+            <Button onClick={toggle} icon={<DiamondPlus />} />
+          </div>
 
-  return (
-    <div className="relative w-[80vw] mt-2.5">
-      <div>
-        <div className="flex justify-between items-center mb-5">
-          <Text text={"Facture"} style={"font-bold"} />
-          <Button onClick={toggle} icon={<DiamondPlus />} />
+          {state && (
+            <Model closeModel={toggle}>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <input
+                  onChange={handleChange}
+                  name="amount"
+                  type="number"
+                  placeholder="Invoice Amount"
+                  className="w-full border rounded-lg p-3 outline-none"
+                />
+
+                <input
+                  onChange={handleChange}
+                  name="duDate"
+                  type="text"
+                  placeholder="Invoice DueDate e.g : 2026-03-06"
+                  className="w-full border rounded-lg p-3 outline-none"
+                />
+
+                <input
+                  onChange={handleChange}
+                  name="description"
+                  type="text"
+                  placeholder="Invoice Description"
+                  className="w-full border rounded-lg p-3 outline-none"
+                />
+
+                <label htmlFor="fournisseur">Choisir un fournisseur:</label>
+                <select onChange={handleChange} name="supplierId">
+                  <option value="">Choose supplier</option>
+                  {suppliers.map((supplier) => {
+                    return (
+                      <option value={supplier._id} key={supplier._id}>
+                        {supplier.name}
+                      </option>
+                    );
+                  })}
+                </select>
+
+                <div className=" flex justify-center items-center">
+                  <button className="bg-black text-white px-4 py-2 rounded">
+                    Add Invoice
+                  </button>
+                </div>
+              </form>
+            </Model>
+          )}
+
+          <InvoiceTable />
         </div>
-
-        {state && (
-          <Model closeModel={toggle}>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                onChange={handleChange}
-                name="amount"
-                type="number"
-                placeholder="Invoice Amount"
-                className="w-full border rounded-lg p-3 outline-none"
-              />
-
-              <input
-                onChange={handleChange}
-                name="duDate"
-                type="text"
-                placeholder="Invoice DueDate e.g : 2026-03-06"
-                className="w-full border rounded-lg p-3 outline-none"
-              />
-
-              <input
-                onChange={handleChange}
-                name="description"
-                type="text"
-                placeholder="Invoice Description"
-                className="w-full border rounded-lg p-3 outline-none"
-              />
-
-              <label htmlFor="fournisseur">Choisir un fournisseur:</label>
-              <select onChange={handleChange} name="supplierId">
-                <option value="">Choose supplier</option>
-                {uniqueArray.map((supplier) => {
-                  return (
-                    <option value={supplier._id} key={supplier._id}>
-                      {supplier.name}
-                    </option>
-                  );
-                })}
-              </select>
-
-              <div className=" flex justify-center items-center">
-                <button className="bg-black text-white px-4 py-2 rounded">
-                  Add Invoice
-                </button>
-              </div>
-            </form>
-          </Model>
-        )}
-
-        <InvoiceTable />
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default InvoicePage;
