@@ -1,5 +1,4 @@
 import "../../css/dashboard.css";
-import { dashboardData } from "../Dashboard/data";
 import { ExpensesChart, DoughnutChart } from "./Chart";
 import { useEffect, useState, useContext } from "react";
 import { getProfile } from "../../services/authService";
@@ -7,38 +6,18 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/ui/Spinner";
 import { InvoiceContext } from "../../components/invoice/context/InvoiceContext";
 
-const totalDepenses = dashboardData.recentFactures.reduce(
-  (total, facture) => total + facture.montant,
-  0,
-);
-
-const moisActuel = new Date().getMonth();
-const anneeActuelle = new Date().getFullYear();
-const paiementCeMois = dashboardData.recentFactures
-  .filter((facture) => {
-    const dateFacture = new Date(facture.date);
-    return (
-      dateFacture.getMonth() === moisActuel &&
-      dateFacture.getFullYear() === anneeActuelle &&
-      facture.statut === "Payée"
-    );
-  })
-  .reduce((total, facture) => total + facture.montant, 0);
-
 function Dashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [invoices, setInvoices] = useState([]);
-  const { getInvoices } = useContext(InvoiceContext);
+  const { invoices, getInvoices, loading: invoicesLoading } = useContext(InvoiceContext);
 
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
-        const response = await getInvoices();
-        setInvoices(response.data || response);
-        console.log("Invoices loaded:", response.data || response);
+        await getInvoices();
+        console.log("Invoices data:", invoices);
       } catch (err) {
         console.error("Error fetching invoices:", err);
         setError("Impossible de charger les factures");
@@ -79,14 +58,34 @@ function Dashboard() {
     fetchUserProfile();
   }, [navigate]);
 
-  if (loading) {
+  // Calculs à partir des factures réelles
+  const totalFactures = invoices?.length || 0;
+  
+  // Total Dépenses = somme de tous les montants
+  const totalDepenses = invoices?.reduce(
+    (total, facture) => total + (facture.amount || 0),
+    0
+  ) || 0;
+  
+  // Factures en retard = filtrer par date d'échéance < date actuelle
+  const facturesEnRetard = invoices?.filter((facture) => {
+    const dueDate = new Date(facture.duDate);
+    const today = new Date();
+    return dueDate < today;
+  }).length || 0;
+  
+
+
+  // Log pour debug
+  console.log("=== Dashboard Calculs ===");
+  console.log("Toutes les factures:", invoices);
+  console.log("Nombre total de factures:", totalFactures);
+  console.log("Total des dépenses:", totalDepenses);
+  console.log("Factures en retard:", facturesEnRetard);
+
+  if (loading || invoicesLoading) {
     return <Spinner />;
   }
-
-  // Calculate late invoices from fetched invoices
-  const facturesEnRetard = invoices.filter(
-    (facture) => facture.statut === "En retard"
-  );
 
   return (
     <div className="dashboard-container">
@@ -94,14 +93,15 @@ function Dashboard() {
         <h1 className="dashboard-title">Dashboard</h1>
 
         <div className="hero">
-          <h3>Bonjour, {user?.[0]?.name || user?.[0]?.username || "Utilisateur"} 👋</h3>
+          <h3>Bonjour, {user?.name || user?.username || "Utilisateur"} 👋</h3>
           <p>Voici un aperçu de votre activité</p>
+          {error && <p className="error-message">{error}</p>}
         </div>
 
         <div className="cards">
           <article>
             <h3>Total Factures</h3> 
-            <p>{invoices.length || dashboardData.recentFactures.length}</p>
+            <p>{totalFactures}</p>
           </article>
 
           <article>
@@ -110,25 +110,20 @@ function Dashboard() {
           </article>
 
           <article>
-            <h3>Facture en retard</h3>
-            <p>{facturesEnRetard.length}</p>
-          </article>
-
-          <article>
-            <h3>Paiement ce mois</h3>
-            <p>{paiementCeMois} DH</p>
+            <h3>Factures en retard</h3>
+            <p>{facturesEnRetard}</p>
           </article>
         </div>
         
         <div className="charts-container">
           <div className="chart">
             <h2>Graphe des Dépenses</h2>
-            <ExpensesChart />
+            <ExpensesChart invoices={invoices} />
           </div>
 
           <div className="chart">
-            <h2>Répartition par status</h2>
-            <DoughnutChart />
+            <h2>Répartition par statut</h2>
+            <DoughnutChart invoices={invoices} />
           </div>
         </div>
       </div>
