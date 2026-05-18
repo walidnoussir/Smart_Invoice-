@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   validate,
   validateCreatePayment,
@@ -18,5 +19,6 @@ router
     createPaymentController,
   )
   .get("/:id/payments", getPaymentsController);
+
 
 export default router;

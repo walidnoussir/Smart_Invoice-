@@ -27,14 +27,12 @@ export const getAllInvoicesService = async (req) => {
 export const getInvoiceByIdService = async (req) => {
   const { id } = req.params;
 
-  // const invoice = await Invoice.find({
-  //   _id: id,
-  //   userId: req.user._id,
-  // }).populate("supplierId", "name email phone");
   const invoice = await Invoice.find({
     _id: id,
-    userId: "69da57e8bf08353ee3ab8719",
+    userId: req.user._id,
   }).populate("supplierId", "name email phone");
+
+  console.log(invoice);
 
   if (!invoice) {
     throw new Error("INVOICE_NOT_FOUND");

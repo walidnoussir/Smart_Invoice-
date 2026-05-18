@@ -102,4 +102,4 @@ function InvoicePage() {
   );
 }
 
-export default InvoiceDetailsPage;
+export default InvoicePage;

@@ -18,6 +18,7 @@ export const loginService = async (req) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
+  const users = await User.find();
 
   if (!user) {
     throw new Error("USER_NOT_FOUND");
