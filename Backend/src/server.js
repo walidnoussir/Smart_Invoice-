@@ -5,19 +5,15 @@ import authRoutes from "./routes/auth.route.js";
 import supplierRoutes from "./routes/supplier.route.js";
 import invoiceRoutes from "./routes/invoice.route.js";
 import paymentRoutes from "./routes/payment.route.js";
+
 import cors from "cors";
 
 const app = express();
 
 dotenv.config();
+app.use(cors());
 
-// Allow requests from your specific frontend origin
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-  }),
-);
-
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);

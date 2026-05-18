@@ -1,14 +1,13 @@
 import { Outlet } from "react-router-dom";
 
 import Dashboard from "./Dashboard";
-import NavBar from "./NavBar";
 
 function AppLayout() {
   return (
-    <div>
-      <NavBar />
+    <div className="flex gap-2.5 h-screen">
+      {/* <NavBar /> */}
       <Dashboard />
-      <main>
+      <main className="w-full overflow-scroll">
         <Outlet />
       </main>
     </div>
