@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
-import HomPage from "./pages/HomPage";
+// import HomPage from "./pages/HomPage";
 import SupplierPage from "./pages/SupplierPage";
 import InvoicePage from "./pages/InvoicePage";
 
@@ -12,8 +12,10 @@ import SupplierDetailsPage from "./pages/SupplierDetailsPage";
 import AuthProvider from "./contexts/AuthContext";
 import InvoiceProvider from "./components/invoice/context/InvoiceProvider";
 import InvoiceDetails from "./pages/InvoiceDetails";
+import Dashboard from "./pages/Dashboard/DashboardPage";
 
 function App() {
+ 
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -30,7 +32,7 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<HomPage />} />
+            <Route index element={<Dashboard />} />
             <Route path="suppliers" element={<SupplierPage />} />
             <Route
               path="suppliers-details/:id"

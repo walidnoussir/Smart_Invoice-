@@ -26,8 +26,12 @@ const formatCurrency = new Intl.NumberFormat("fr-MA", {
   currency: "MAD",
 }).format;
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA5ZTQxYTdiN2UwMmM3NDE1NjI3NjkiLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzc5MDMzMTE0LCJleHAiOjE3Nzk2Mzc5MTR9.z0_BzyTH4gsQbOfn-6ucfLdtWYqODNctEq1vF5Ef0NE";
+const token = localStorage.getItem("token")
+console.log(token);
+
+
+// const token =
+//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTA5ZTQxYTdiN2UwMmM3NDE1NjI3NjkiLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzc5MDMzMTE0LCJleHAiOjE3Nzk2Mzc5MTR9.z0_BzyTH4gsQbOfn-6ucfLdtWYqODNctEq1vF5Ef0NE";
 
 export default function InvoiceDetailsPage() {
   const { id } = useParams();

@@ -21,6 +21,10 @@ app.use("/api/suppliers", supplierRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/invoices", paymentRoutes);
 
+app.get("/api/test", (req, res) => {
+  res.json({ message: "test message !" });
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
