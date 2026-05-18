@@ -2,16 +2,17 @@ import { useEffect } from "react";
 import { useInvoiceContext } from "../../hooks/useInvoiceContext";
 import { InvoiceContext } from "./context/InvoiceContext";
 import InvoiceRow from "./InvoiceRow";
+import Spinner from "../ui/Spinner";
 
 function InvoiceTable() {
   const { loading, invoices, getInvoices } = useInvoiceContext(InvoiceContext);
 
   useEffect(() => {
     getInvoices();
-  }, []);
+  }, [getInvoices]);
 
   if (loading) {
-    return <div>Loading....</div>;
+    return <Spinner />;
   } else {
     return (
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-md  border border-gray-200">
@@ -26,7 +27,7 @@ function InvoiceTable() {
         </div>
         {/* Rows */}
         <div>
-          {invoices?.map((invoice) => (
+          {invoices.map((invoice) => (
             //console.log("data", data),
             <InvoiceRow key={invoice._id} invoice={invoice} />
           ))}
