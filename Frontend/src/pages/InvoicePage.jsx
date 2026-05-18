@@ -1,53 +1,103 @@
 import { DiamondPlus } from "lucide-react";
-import { invoices } from "../components/invoice/fakeData";
 import InvoiceTable from "../components/invoice/InvoiceTable";
 import Text from "../components/Text";
 import Button from "../components/Button";
 import { useToggle } from "../hooks/usetoggle";
 import Model from "../components/Model";
-import useSave from "../hooks/useSave";
-import useRetreive from "../hooks/useRetreive";
+import { useInvoiceContext } from "../hooks/useInvoiceContext";
+import { InvoiceContext } from "../components/invoice/context/InvoiceContext";
+import { useState } from "react";
 
 function InvoicePage() {
   const [state, toggle] = useToggle();
+  const { invoices, addInvoice, loading } = useInvoiceContext(InvoiceContext);
 
-  const [isLoading, isError, isLoaded] = useSave();
+  const [invoice, setInvoice] = useState({
+    amount: null,
+    supplierId: "",
+    duDate: "",
+    description: "",
+  });
 
-  const { loading, error, data } = useRetreive();
+  const uniqueArray = [
+    ...new Map(
+      invoices.map(({ supplierId }) => [supplierId._id, supplierId]),
+    ).values(),
+  ];
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    console.log("key:", name, "value", value);
+    setInvoice({ ...invoice, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await addInvoice(invoice);
+
+    console.log("invoice added");
+  };
 
   return (
     <div className="relative w-[80vw] mt-2.5">
-      <div className="flex justify-between items-center mb-5">
-        <Text text={"Facture"} style={"font-bold"} />
-        <Button onClick={toggle} icon={<DiamondPlus />} />
+      <div>
+        <div className="flex justify-between items-center mb-5">
+          <Text text={"Facture"} style={"font-bold"} />
+          <Button onClick={toggle} icon={<DiamondPlus />} />
+        </div>
+
+        {state && (
+          <Model closeModel={toggle}>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                onChange={handleChange}
+                name="amount"
+                type="number"
+                placeholder="Invoice Amount"
+                className="w-full border rounded-lg p-3 outline-none"
+              />
+
+              <input
+                onChange={handleChange}
+                name="duDate"
+                type="text"
+                placeholder="Invoice DueDate e.g : 2026-03-06"
+                className="w-full border rounded-lg p-3 outline-none"
+              />
+
+              <input
+                onChange={handleChange}
+                name="description"
+                type="text"
+                placeholder="Invoice Description"
+                className="w-full border rounded-lg p-3 outline-none"
+              />
+
+              <label htmlFor="fournisseur">Choisir un fournisseur:</label>
+              <select onChange={handleChange} name="supplierId">
+                <option value="">Choose supplier</option>
+                {uniqueArray.map((supplier) => {
+                  return (
+                    <option value={supplier._id} key={supplier._id}>
+                      {supplier.name}
+                    </option>
+                  );
+                })}
+              </select>
+
+              <div className=" flex justify-center items-center">
+                <button className="bg-black text-white px-4 py-2 rounded">
+                  Add Invoice
+                </button>
+              </div>
+            </form>
+          </Model>
+        )}
+
+        <InvoiceTable />
       </div>
-
-      {state && (
-        <Model closeModel={toggle}>
-          <form className="space-y-4">
-            <input
-              type="text"
-              placeholder="Invoice Number"
-              className="w-full border rounded-lg p-3 outline-none"
-            />
-
-            <input
-              type="text"
-              placeholder="Supplier"
-              className="w-full border rounded-lg p-3 outline-none"
-            />
-
-            <Button
-              onClick={() => {
-                console.log("Hello");
-              }}
-              icon={<DiamondPlus />}
-            />
-          </form>
-        </Model>
-      )}
-
-      <InvoiceTable invoices={invoices} />
     </div>
   );
 }

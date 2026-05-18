@@ -1,6 +1,10 @@
 import "../../css/dashboard.css";
 import { dashboardData } from "../Dashboard/data";
 import { ExpensesChart, DoughnutChart } from "./Chart";
+import { useEffect, useState } from "react";
+import { getProfile } from "../../services/authService";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/ui/Spinner";
 
 const facturesEnRetard = dashboardData.recentFactures.filter(
   (facture) => facture.statut === "En retard",
@@ -26,20 +30,58 @@ const paiementCeMois = dashboardData.recentFactures
   .reduce((total, facture) => total + facture.montant, 0);
 
 function Dashboard() {
-  const name = "Zineb";
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+ 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem("token");
+      
+      // Vérifier si l'utilisateur est authentifié
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await getProfile();
+        
+        setUser(response.data); // Stocker les infos utilisateur
+        setLoading(false);
+      } catch (err) {
+        console.error("Erreur lors de la récupération du profil:", err);
+        
+        // Si le token est invalide ou expiré
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          localStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          setError("Impossible de charger les informations utilisateur");
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, [navigate]);
+  if(loading) {
+    return <Spinner />
+  }
   return (
     <div className="dashboard-container">
       <div className="dashboard-content">
         <h1 className="dashboard-title">Dashboard</h1>
 
         <div className="hero">
-          <h3>Bonjour, {name} 👋</h3>
+          <h3>Bonjour, {user[0]?.name || user[0]?.username || "Utilisateur"} 👋</h3>
           <p>Voici un aperçu de votre activité</p>
         </div>
 
         <div className="cards">
           <article>
-            <h3>Total Factures</h3>
+            <h3>Total Factures</h3> 
             <p>{dashboardData.recentFactures.length}</p>
           </article>
 
