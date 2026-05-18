@@ -36,6 +36,7 @@ function InvoicePage() {
     e.preventDefault();
 
     await addInvoice(invoice);
+    toggle();
 
     console.log("invoice added");
   };
@@ -82,7 +83,7 @@ function InvoicePage() {
                   <option value="">Choose supplier</option>
                   {suppliers.map((supplier) => {
                     return (
-                      <option value={supplier._id} key={supplier._id}>
+                      <option key={supplier._id} value={supplier._id}>
                         {supplier.name}
                       </option>
                     );

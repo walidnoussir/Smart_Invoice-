@@ -65,6 +65,7 @@ const InvoiceProvider = ({ children }) => {
         );
 
         setInvoices((prev) => [...prev, response.data.invoice]);
+        getInvoices();
       } catch (error) {
         console.log("ADD ERROR:", error);
 
