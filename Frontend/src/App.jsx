@@ -15,7 +15,6 @@ import InvoiceDetails from "./pages/InvoiceDetails";
 import Dashboard from "./pages/Dashboard/DashboardPage";
 
 function App() {
- 
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -33,11 +32,14 @@ function App() {
             }
           >
             <Route index element={<Dashboard />} />
+
             <Route path="suppliers" element={<SupplierPage />} />
+
             <Route
               path="suppliers-details/:id"
               element={<SupplierDetailsPage />}
             />
+
             <Route
               path="invoices"
               element={

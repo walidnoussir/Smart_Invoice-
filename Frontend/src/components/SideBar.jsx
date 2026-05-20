@@ -8,11 +8,12 @@ function SideBar() {
     <div className="flex flex-col justify-between h-[95%] fixed py-4 px-2">
       <ul className="flex gap-5 flex-col text-white">
         <li>
-          <NavLink to="/home" end className="li">
+          <NavLink to="/home">
             <House />
             <span>Dashboard</span>
           </NavLink>
         </li>
+
         <li>
           <NavLink to="suppliers" className="li">
             <Users />
@@ -27,7 +28,7 @@ function SideBar() {
         </li>
       </ul>
 
-      <button className="li text-white px-2" onClick={logout}>
+      <button className="text-white px-2" onClick={logout}>
         <LogOut />
         <span>Logout</span>
       </button>

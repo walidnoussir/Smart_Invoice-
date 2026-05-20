@@ -1,15 +1,10 @@
-import { useEffect } from "react";
 import { useInvoiceContext } from "../../hooks/useInvoiceContext";
 import { InvoiceContext } from "./context/InvoiceContext";
 import InvoiceRow from "./InvoiceRow";
 import Spinner from "../ui/Spinner";
 
 function InvoiceTable() {
-  const { loading, invoices, getInvoices } = useInvoiceContext(InvoiceContext);
-
-  useEffect(() => {
-    getInvoices();
-  }, [getInvoices]);
+  const { loading, invoices } = useInvoiceContext(InvoiceContext);
 
   if (loading) {
     return <Spinner />;

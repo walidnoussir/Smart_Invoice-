@@ -11,7 +11,7 @@ import Spinner from "../components/ui/Spinner";
 
 function InvoicePage() {
   const [state, toggle] = useToggle();
-  const { addInvoice, loading, getSuppliers, suppliers } =
+  const { addInvoice, loading, getSuppliers, suppliers, getInvoices } =
     useInvoiceContext(InvoiceContext);
 
   const [invoice, setInvoice] = useState({
@@ -22,14 +22,18 @@ function InvoicePage() {
   });
 
   useEffect(() => {
+    getInvoices();
     getSuppliers();
-  }, [getSuppliers]);
+  }, []);
 
   const handleChange = (e) => {
     const value = e.target.value;
     const name = e.target.name;
     console.log("key:", name, "value", value);
-    setInvoice({ ...invoice, [name]: value });
+    setInvoice((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
