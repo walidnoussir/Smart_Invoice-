@@ -1,6 +1,6 @@
-import { BrowserRouter, data, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
-import HomPage from "./pages/HomPage";
+// import HomPage from "./pages/HomPage";
 import SupplierPage from "./pages/SupplierPage";
 import InvoicePage from "./pages/InvoicePage";
 
@@ -11,18 +11,22 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import SupplierDetailsPage from "./pages/SupplierDetailsPage";
 import AuthProvider from "./contexts/AuthContext";
 import InvoiceProvider from "./components/invoice/context/InvoiceProvider";
-import InvoiceDetails from "./pages/InvoiceDetails";
 import Dashboard from "./pages/Dashboard/DashboardPage";
+import InvoiceDetailsPage from "./pages/InvoiceDetailPage";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+        <InvoiceProvider>
+          {" "}
+          {/* Move InvoiceProvider here */}
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
+<<<<<<< HEAD
           <Route
             path="/home"
             element={
@@ -42,15 +46,31 @@ function App() {
 
             <Route
               path="invoices"
+=======
+            <Route
+              path="/home"
+>>>>>>> 3f80cad258e0b6b13c8e3650218938d04647c9b0
               element={
-                <InvoiceProvider>
-                  <InvoicePage />
-                </InvoiceProvider>
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
               }
-            />
-            <Route path="invoice-details/:id" element={<InvoiceDetails />} />
-          </Route>
-        </Routes>
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="suppliers" element={<SupplierPage />} />
+              <Route
+                path="suppliers-details/:id"
+                element={<SupplierDetailsPage />}
+              />
+              <Route path="invoices" element={<InvoicePage />} />{" "}
+              {/* Remove InvoiceProvider from here */}
+              <Route
+                path="invoice-details/:id"
+                element={<InvoiceDetailsPage />}
+              />
+            </Route>
+          </Routes>
+        </InvoiceProvider>
       </AuthProvider>
     </BrowserRouter>
   );

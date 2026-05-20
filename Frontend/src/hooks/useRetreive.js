@@ -6,9 +6,6 @@ const useRetreive = (api_url) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
-  ///// -- i'll unComment this line after after compilation of project.
-  // const token = localStorage.getItem("token");
-
   useEffect(() => {
     const fetchData = async () => {
       try {

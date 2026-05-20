@@ -53,6 +53,7 @@ const InvoiceProvider = ({ children }) => {
   // ADD INVOICE
   const addInvoice = useCallback(
     async (invoice) => {
+      console.log("Inserted invoice", invoice);
       try {
         const response = await axios.post(
           "http://localhost:5000/api/invoices",

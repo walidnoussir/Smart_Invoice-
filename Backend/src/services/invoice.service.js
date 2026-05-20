@@ -32,6 +32,8 @@ export const getInvoiceByIdService = async (req) => {
     userId: req.user._id,
   }).populate("supplierId", "name email phone");
 
+  console.log(invoice);
+
   if (!invoice) {
     throw new Error("INVOICE_NOT_FOUND");
   }

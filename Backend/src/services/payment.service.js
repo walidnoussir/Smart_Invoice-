@@ -3,7 +3,7 @@ import Payment from "../models/payment.model.js";
 
 export const createPaymentService = async (req) => {
   const { id: invoiceId } = req.params;
-  const { amount, paymentDate } = req.body;
+  const { amount, paymentDate, paymentMethod } = req.body;
 
   const invoice = await Invoice.findById(invoiceId);
 
@@ -22,12 +22,13 @@ export const createPaymentService = async (req) => {
     throw new Error("AMOUNT_EXCEEDS_REMAINING_BALANCE");
   }
 
-  const newCurrentAmount = previousCurrentAmount + amount;
+  const newCurrentAmount = previousCurrentAmount + Number(amount);
 
   const payment = await Payment.create({
     amount,
     currentAmount: newCurrentAmount,
     paymentDate,
+    paymentMethod,
     invoiceId,
     userId: req.user._id,
   });
@@ -39,7 +40,6 @@ export const createPaymentService = async (req) => {
 
   return { payment, invoiceStatus: newStatus };
 };
-
 export const getPaymentsService = async (req) => {
   const { id: invoiceId } = req.params;
   const payments = await Payment.find({
@@ -49,3 +49,4 @@ export const getPaymentsService = async (req) => {
 
   return payments;
 };
+
